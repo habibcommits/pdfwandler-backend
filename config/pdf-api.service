@@ -1,0 +1,22 @@
+[Unit]
+Description=PDF Tools API - Gunicorn
+After=network.target
+
+[Service]
+Type=notify
+User=pdfapi
+Group=pdfapi
+WorkingDirectory=/home/pdfapi/pdf-tools-backend
+Environment="PATH=/home/pdfapi/pdf-tools-backend/venv/bin"
+EnvironmentFile=/home/pdfapi/pdf-tools-backend/.env
+ExecStart=/home/pdfapi/pdf-tools-backend/venv/bin/gunicorn \
+    --config /home/pdfapi/pdf-tools-backend/config/gunicorn.conf.py \
+    main:app
+
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
