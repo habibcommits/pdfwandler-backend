@@ -1,0 +1,188 @@
+
+
+Provide logs or command output from production:
+
+
+docker ps
+docker stats --no-stream
+ps aux | grep -E "celery|beat"
+
+
+
+
+---
+
+
+ 3. Auto-Delete Temporary Files (GDPR)
+
+
+Uploaded files must be deleted automatically after the set retention time.
+
+
+Please provide proof:
+
+
+Auto-delete function is implemented
+
+
+Celery beat or cron is scheduled
+
+
+Files older than retention time are actually removed
+
+
+
+
+Provide:
+
+
+ls -lh /path/to/uploads
+find /path/to/uploads -type f -mmin +60 -ls
+
+
+(or Celery beat logs showing deletion)
+
+
+
+
+---
+
+
+ 4. Production Deployment Files
+
+
+Please provide or push to GitHub:
+
+
+Dockerfile
+
+
+docker-compose.yml (production) OR Azure deployment configuration
+
+
+nginx.conf (if used)
+
+
+.env.example (all required env variables)
+
+
+Short deployment guide (how backend is deployed in Azure)
+
+
+
+
+
+
+---
+
+
+ 5. Health & API Endpoint Confirmation
+
+
+Confirm production backend is fully functional:
+
+
+/docs (Swagger UI)
+
+
+/health endpoint
+
+
+API endpoints used by frontend
+
+
+
+
+Provide:
+
+
+curl -I https://<backend-url>/docs
+curl -I https://<backend-url>/health
+
+
+
+
+---
+
+
+ 6. Conversion Performance Test
+
+
+Please run:
+
+
+One test with 5 images
+
+
+One test with ~50 images
+
+
+
+
+And provide output:
+
+
+HTTP status
+Processing time (time_total)
+
+
+Also attach both generated PDFs.
+
+
+
+
+---
+
+
+ 7. Add Robots.txt and Sitemap.xml    Completed
+
+
+These two files must exist for Google Search Console.
+
+
+robots.txt
+
+
+Place at: https://pdfwandler.de/robots.txt
+
+
+User-agent: *
+Allow: /
+
+
+Sitemap: https://pdfwandler.de/sitemap.xml
+
+
+sitemap.xml
+
+
+Place at: https://pdfwandler.de/sitemap.xml
+Include:
+
+
+Homepage
+
+
+All tool pages
+
+
+Blog page
+
+
+All blog posts
+
+
+
+
+Confirm both links return HTTP 200.
+
+
+
+
+---
+
+
+ Please complete all tasks above and confirm with logs, links, or sample files.
+
+
+After that, we will finalize the project.

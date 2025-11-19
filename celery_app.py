@@ -23,3 +23,18 @@ celery_app.conf.update(
     worker_prefetch_multiplier=1,
     worker_max_tasks_per_child=1000,
 )
+
+from celery.schedules import crontab
+
+celery_app.conf.beat_schedule = {
+    'cleanup-temp-files-every-30-minutes': {
+        'task': 'tasks.cleanup_old_files',
+        'schedule': crontab(minute='*/30'),
+        'args': ('temp', 1),
+    },
+    'cleanup-upload-files-every-30-minutes': {
+        'task': 'tasks.cleanup_old_files',
+        'schedule': crontab(minute='*/30'),
+        'args': ('uploads', 1),
+    },
+}
