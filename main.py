@@ -8,10 +8,15 @@ import shutil
 from datetime import datetime, timedelta
 import asyncio
 from pathlib import Path
+import logging
 
 from tools.image_to_pdf import convert_images_to_pdf
 from tools.merge_pdf import merge_pdfs
 from tools.compress_pdf import compress_pdf
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="PDF Tools API")
 
@@ -29,23 +34,30 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
 async def cleanup_old_files():
-    """Remove files older than 1 hour"""
+    """Remove files older than 2 hours (increased from 1 hour for user downloads)"""
     while True:
         try:
             now = datetime.now()
+            cleaned = 0
             for directory in [UPLOAD_DIR, TEMP_DIR]:
                 for file_path in directory.glob("*"):
                     if file_path.is_file():
                         file_age = now - datetime.fromtimestamp(file_path.stat().st_mtime)
-                        if file_age > timedelta(hours=1):
+                        # Changed from 1 hour to 2 hours to give users more time to download
+                        if file_age > timedelta(hours=2):
                             file_path.unlink()
+                            cleaned += 1
+            if cleaned > 0:
+                logger.info(f"Cleaned up {cleaned} old files")
         except Exception as e:
-            print(f"Cleanup error: {e}")
-        await asyncio.sleep(300)
+            logger.error(f"Cleanup error: {e}")
+        # Run cleanup every 30 minutes (increased from 5 minutes)
+        await asyncio.sleep(1800)
 
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(cleanup_old_files())
+    logger.info("PDF Tools API started successfully")
 
 @app.get("/")
 async def root():
@@ -87,21 +99,25 @@ async def image_to_pdf(files: List[UploadFile] = File(...)):
         output_filename = f"{uuid.uuid4()}.pdf"
         output_path = TEMP_DIR / output_filename
         
+        logger.info(f"Converting {len(uploaded_files)} images to PDF")
         convert_images_to_pdf(uploaded_files, str(output_path))
         
+        # Clean up input files
         for file_path in uploaded_files:
             Path(file_path).unlink(missing_ok=True)
         
         return FileResponse(
             path=output_path,
             media_type="application/pdf",
-            filename="converted.pdf"
+            filename="converted.pdf",
+            background=None  # Don't delete file in background
         )
     
     except Exception as e:
+        logger.error(f"Image to PDF error: {str(e)}")
         for file_path in uploaded_files:
             Path(file_path).unlink(missing_ok=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Error converting images: {str(e)}")
 
 @app.post("/api/merge-pdf")
 async def merge_pdf_endpoint(files: List[UploadFile] = File(...)):
@@ -136,21 +152,25 @@ async def merge_pdf_endpoint(files: List[UploadFile] = File(...)):
         output_filename = f"{uuid.uuid4()}.pdf"
         output_path = TEMP_DIR / output_filename
         
+        logger.info(f"Merging {len(uploaded_files)} PDFs")
         merge_pdfs(uploaded_files, str(output_path))
         
+        # Clean up input files
         for file_path in uploaded_files:
             Path(file_path).unlink(missing_ok=True)
         
         return FileResponse(
             path=output_path,
             media_type="application/pdf",
-            filename="merged.pdf"
+            filename="merged.pdf",
+            background=None  # Don't delete file in background
         )
     
     except Exception as e:
+        logger.error(f"Merge PDF error: {str(e)}")
         for file_path in uploaded_files:
             Path(file_path).unlink(missing_ok=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Error merging PDFs: {str(e)}")
 
 @app.post("/api/compress-pdf")
 async def compress_pdf_endpoint(
@@ -169,13 +189,33 @@ async def compress_pdf_endpoint(
             detail=f"Invalid file type: {file.filename}. Only PDF files allowed"
         )
     
+    # Validate parameters
+    if dpi < 72 or dpi > 300:
+        raise HTTPException(status_code=400, detail="DPI must be between 72 and 300")
+    
+    if image_quality < 10 or image_quality > 100:
+        raise HTTPException(status_code=400, detail="Image quality must be between 10 and 100")
+    
+    if color_mode not in ["no-change", "grayscale", "monochrome"]:
+        raise HTTPException(status_code=400, detail="Color mode must be: no-change, grayscale, or monochrome")
+    
     file_id = f"{uuid.uuid4()}.pdf"
     file_path = UPLOAD_DIR / file_id
+    output_path = None
     
     try:
+        # Save uploaded file
+        logger.info(f"Compressing PDF: {file.filename} (DPI: {dpi}, Quality: {image_quality}, Color: {color_mode})")
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
+        # Verify file was saved
+        if not file_path.exists():
+            raise Exception("Failed to save uploaded file")
+        
+        logger.info(f"Input file saved: {file_path} ({file_path.stat().st_size} bytes)")
+        
+        # Compress PDF
         output_filename = f"{uuid.uuid4()}.pdf"
         output_path = TEMP_DIR / output_filename
         
@@ -187,17 +227,37 @@ async def compress_pdf_endpoint(
             color_mode=color_mode
         )
         
+        # Verify output was created
+        if not output_path.exists():
+            raise Exception("Compression completed but output file was not created")
+        
+        logger.info(f"Output file created: {output_path} ({output_path.stat().st_size} bytes)")
+        
+        # Clean up input file
         file_path.unlink(missing_ok=True)
         
+        # Return compressed PDF
         return FileResponse(
             path=output_path,
             media_type="application/pdf",
-            filename="compressed.pdf"
+            filename=f"compressed_{file.filename}",
+            background=None  # Don't delete file in background
         )
     
     except Exception as e:
-        file_path.unlink(missing_ok=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        # Clean up files on error
+        logger.error(f"Compression error: {str(e)}", exc_info=True)
+        if file_path.exists():
+            file_path.unlink(missing_ok=True)
+        if output_path and output_path.exists():
+            output_path.unlink(missing_ok=True)
+        
+        # Return detailed error message
+        error_detail = str(e)
+        if "Ghostscript" in error_detail or "gs" in error_detail:
+            error_detail = f"PDF compression failed: {error_detail}. Please ensure the PDF is valid and not corrupted."
+        
+        raise HTTPException(status_code=500, detail=error_detail)
 
 if __name__ == "__main__":
     import uvicorn
