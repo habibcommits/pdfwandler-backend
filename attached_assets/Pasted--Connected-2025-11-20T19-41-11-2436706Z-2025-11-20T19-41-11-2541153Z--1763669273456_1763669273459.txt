@@ -1,0 +1,81 @@
+
+Connected!
+2025-11-20T19:41:11.2436706Z    _____
+2025-11-20T19:41:11.2541153Z   /  _  \ __________ _________   ____
+2025-11-20T19:41:11.2546891Z  /  /_\  \\___   /  |  \_  __ \_/ __ \
+2025-11-20T19:41:11.25479Z /    |    \/    /|  |  /|  | \/\  ___/
+2025-11-20T19:41:11.254873Z \____|__  /_____ \____/ |__|    \___  >
+2025-11-20T19:41:11.2550139Z         \/      \/                  \/
+2025-11-20T19:41:11.2625095Z A P P   S E R V I C E   O N   L I N U X
+2025-11-20T19:41:11.2632819Z
+2025-11-20T19:41:11.2640817Z Documentation    : http://aka.ms/webapp-linux
+2025-11-20T19:41:11.2930238Z Python quickstart: https://aka.ms/python-qs
+2025-11-20T19:41:11.2930671Z Python version   : 3.11.14
+2025-11-20T19:41:11.2930765Z Instance Name    : lw0sdlwk00000D
+2025-11-20T19:41:11.29308Z Instance Id      : 08307498aa991c84523184617d17f074bad5139bd2c0710fdf2b1a0ad3d3a9b7
+2025-11-20T19:41:11.2930822Z
+2025-11-20T19:41:11.2930848Z Note: Any data outside '/home' is not persisted
+2025-11-20T19:41:17.1184684Z Starting OpenBSD Secure Shell server: sshd.
+2025-11-20T19:41:17.1912283Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-11-20T19:41:17.2783167Z Updating certificates in /etc/ssl/certs...
+2025-11-20T19:42:11.1950725Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-11-20T19:42:11.2249056Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_R46.pem
+2025-11-20T19:42:11.2461468Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-11-20T19:42:11.4219573Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_E46.pem
+2025-11-20T19:42:11.7566254Z 4 added, 0 removed; done.
+2025-11-20T19:42:11.7573959Z Running hooks in /etc/ca-certificates/update.d...
+2025-11-20T19:42:11.7857506Z done.
+2025-11-20T19:42:11.9300197Z CA certificates copied and updated successfully.
+2025-11-20T19:42:12.3076431Z Site's appCommandLine: gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300
+2025-11-20T19:42:12.3077193Z
+2025-11-20T19:42:14.0164215Z Starting periodic command scheduler: cron.
+2025-11-20T19:42:14.017411Z Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300
+2025-11-20T19:42:14.0174397Z '
+2025-11-20T19:42:16.7874675Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-11-20T19:42:16.7991171Z Build Operation ID: e4f48f25e7c2cd3c
+2025-11-20T19:42:16.8391745Z Output is compressed. Extracting it...
+2025-11-20T19:42:16.9268545Z Oryx Version: 0.2.20251017.2, Commit: 482d4c55e818733ab33b9d2131f9dc485a21fd03, ReleaseTagName: 20251017.2
+2025-11-20T19:42:16.9277417Z Extracting '/home/site/wwwroot/output.tar.gz' to directory '/tmp/8de286c62b9f578'...
+2025-11-20T19:42:53.4321706Z App path is set to '/tmp/8de286c62b9f578'
+2025-11-20T19:42:53.4812549Z Writing output script to '/opt/startup/startup.sh'
+2025-11-20T19:42:55.0707044Z Using packages from virtual environment antenv located at /tmp/8de286c62b9f578/antenv.
+2025-11-20T19:42:55.0713884Z Updated PYTHONPATH to '/opt/startup/app_logs:/tmp/8de286c62b9f578/antenv/lib/python3.11/site-packages'
+2025-11-20T19:43:00.3054997Z [2025-11-20 19:43:00 +0000] [2115] [INFO] Starting gunicorn 23.0.0
+2025-11-20T19:43:00.3055612Z [2025-11-20 19:43:00 +0000] [2115] [INFO] Listening at: http://0.0.0.0:8000 (2115)
+2025-11-20T19:43:00.3251486Z [2025-11-20 19:43:00 +0000] [2115] [INFO] Using worker: uvicorn.workers.UvicornWorker
+2025-11-20T19:43:00.9709383Z [2025-11-20 19:43:00 +0000] [2119] [INFO] Booting worker with pid: 2119
+2025-11-20T19:43:00.9710555Z [2025-11-20 19:43:00 +0000] [2120] [INFO] Booting worker with pid: 2120
+2025-11-20T19:43:14.6313814Z [2025-11-20 19:43:14 +0000] [2119] [INFO] Started server process [2119]
+2025-11-20T19:43:14.6314511Z [2025-11-20 19:43:14 +0000] [2120] [INFO] Started server process [2120]
+2025-11-20T19:43:14.6314546Z [2025-11-20 19:43:14 +0000] [2119] [INFO] Waiting for application startup.
+2025-11-20T19:43:14.6314572Z INFO:main:PDF Tools API started successfully
+2025-11-20T19:43:14.6331696Z [2025-11-20 19:43:14 +0000] [2120] [INFO] Waiting for application startup.
+2025-11-20T19:43:14.6406948Z INFO:main:PDF Tools API started successfully
+2025-11-20T19:43:14.6428225Z [2025-11-20 19:43:14 +0000] [2120] [INFO] Application startup complete.
+2025-11-20T19:43:14.6525044Z [2025-11-20 19:43:14 +0000] [2119] [INFO] Application startup complete.
+2025-11-20T19:44:34.4013152Z INFO:main:Converting 3 images to PDF
+2025-11-20T19:44:58.8304707Z INFO:main:Compressing PDF: processed (6).pdf (DPI: 144, Quality: 75, Color: no-change)
+2025-11-20T19:44:58.8613393Z INFO:main:Input file saved: uploads/baa6fd0b-c2a6-4c26-bb6b-e13f96ad9bbd.pdf (3530056 bytes)
+2025-11-20T19:44:58.979094Z ERROR:main:Compression error: Ghostscript not found - please ensure it's installed on the system
+2025-11-20T19:44:58.9791392Z Traceback (most recent call last):
+2025-11-20T19:44:58.9791418Z   File "/tmp/8de286c62b9f578/tools/compress_pdf.py", line 74, in compress_pdf
+2025-11-20T19:44:58.9791436Z     result = subprocess.run(
+2025-11-20T19:44:58.979145Z              ^^^^^^^^^^^^^^^
+2025-11-20T19:44:58.9791466Z   File "/opt/python/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+2025-11-20T19:44:58.9791482Z     with Popen(*popenargs, **kwargs) as process:
+2025-11-20T19:44:58.9791567Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-11-20T19:44:58.9791584Z   File "/opt/python/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+2025-11-20T19:44:58.9791625Z     self._execute_child(args, executable, preexec_fn, close_fds,
+2025-11-20T19:44:58.9791643Z   File "/opt/python/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+2025-11-20T19:44:58.9791658Z     raise child_exception_type(errno_num, err_msg, err_filename)
+2025-11-20T19:44:58.9791674Z FileNotFoundError: [Errno 2] No such file or directory: 'gs'
+2025-11-20T19:44:58.9791688Z
+2025-11-20T19:44:58.9791705Z During handling of the above exception, another exception occurred:
+2025-11-20T19:44:58.9791717Z
+2025-11-20T19:44:58.9791732Z Traceback (most recent call last):
+2025-11-20T19:44:58.9791775Z   File "/tmp/8de286c62b9f578/main.py", line 222, in compress_pdf_endpoint
+2025-11-20T19:44:58.9791791Z     compress_pdf(
+2025-11-20T19:44:58.9791807Z   File "/tmp/8de286c62b9f578/tools/compress_pdf.py", line 91, in compress_pdf
+2025-11-20T19:44:58.9791824Z     raise Exception("Ghostscript not found - please ensure it's installed on the system")
+2025-11-20T19:44:58.979184Z Exception: Ghostscript not found - please ensure it's installed on the system
+2025-11-20T19:46:50.893544Z    _____
