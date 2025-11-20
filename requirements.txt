@@ -8,3 +8,13 @@ gunicorn==21.2.0
 celery==5.3.4
 redis==5.0.1
 requests==2.32.5
+aiofiles==23.2.1
+celery==5.3.4
+fastapi==0.109.0
+gunicorn==21.2.0
+pillow==10.3.0
+PyPDF2==3.0.1
+python-multipart==0.0.6
+redis==5.0.1
+requests==2.32.5
+uvicorn[standard]==0.27.0
