@@ -1,0 +1,229 @@
+
+Connected!
+2025-11-20T19:58:00.1093674Z    _____
+2025-11-20T19:58:00.1095473Z   /  _  \ __________ _________   ____
+2025-11-20T19:58:00.1095526Z  /  /_\  \\___   /  |  \_  __ \_/ __ \
+2025-11-20T19:58:00.109555Z /    |    \/    /|  |  /|  | \/\  ___/
+2025-11-20T19:58:00.1095574Z \____|__  /_____ \____/ |__|    \___  >
+2025-11-20T19:58:00.1095604Z         \/      \/                  \/
+2025-11-20T19:58:00.1095625Z A P P   S E R V I C E   O N   L I N U X
+2025-11-20T19:58:00.1095646Z
+2025-11-20T19:58:00.1095698Z Documentation    : http://aka.ms/webapp-linux
+2025-11-20T19:58:00.1095724Z Python quickstart: https://aka.ms/python-qs
+2025-11-20T19:58:00.1095746Z Python version   : 3.11.14
+2025-11-20T19:58:00.1095768Z Instance Name    : lw0sdlwk00000D
+2025-11-20T19:58:00.1095795Z Instance Id      : 08307498aa991c84523184617d17f074bad5139bd2c0710fdf2b1a0ad3d3a9b7
+2025-11-20T19:58:00.1095817Z
+2025-11-20T19:58:00.1095862Z Note: Any data outside '/home' is not persisted
+2025-11-20T19:58:02.4375699Z Starting OpenBSD Secure Shell server: sshd.
+2025-11-20T19:58:02.4376115Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-11-20T19:58:02.4376148Z Updating certificates in /etc/ssl/certs...
+2025-11-20T19:58:29.7551995Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-11-20T19:58:29.7634798Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_R46.pem
+2025-11-20T19:58:29.7740316Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-11-20T19:58:29.7845108Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_E46.pem
+2025-11-20T19:58:29.9187328Z 4 added, 0 removed; done.
+2025-11-20T19:58:29.9192435Z Running hooks in /etc/ca-certificates/update.d...
+2025-11-20T19:58:29.9550815Z done.
+2025-11-20T19:58:30.0235066Z CA certificates copied and updated successfully.
+2025-11-20T19:58:30.2099236Z Site's appCommandLine: gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300
+2025-11-20T19:58:30.2102791Z
+2025-11-20T19:58:30.6404192Z Starting periodic command scheduler: cron.
+2025-11-20T19:58:30.6412263Z Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300
+2025-11-20T19:58:30.6415469Z '
+2025-11-20T19:58:31.0415219Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-11-20T19:58:31.0613053Z Build Operation ID: ce2426a642425c6a
+2025-11-20T19:58:31.0724301Z Oryx Version: 0.2.20251017.2, Commit: 482d4c55e818733ab33b9d2131f9dc485a21fd03, ReleaseTagName: 20251017.2
+2025-11-20T19:58:31.1001597Z Output is compressed. Extracting it...
+2025-11-20T19:58:31.1001897Z Extracting '/home/site/wwwroot/output.tar.gz' to directory '/tmp/8de286eb2af75a4'...
+2025-11-20T19:58:44.9633659Z App path is set to '/tmp/8de286eb2af75a4'
+2025-11-20T19:58:44.9831556Z Writing output script to '/opt/startup/startup.sh'
+2025-11-20T19:58:45.2954912Z Using packages from virtual environment antenv located at /tmp/8de286eb2af75a4/antenv.
+2025-11-20T19:58:45.295992Z Updated PYTHONPATH to '/opt/startup/app_logs:/tmp/8de286eb2af75a4/antenv/lib/python3.11/site-packages'
+2025-11-20T19:58:49.6400029Z [2025-11-20 19:58:49 +0000] [2111] [INFO] Starting gunicorn 23.0.0
+2025-11-20T19:58:49.657257Z [2025-11-20 19:58:49 +0000] [2111] [INFO] Listening at: http://0.0.0.0:8000 (2111)
+2025-11-20T19:58:49.6573042Z [2025-11-20 19:58:49 +0000] [2111] [INFO] Using worker: uvicorn.workers.UvicornWorker
+2025-11-20T19:58:49.6680563Z [2025-11-20 19:58:49 +0000] [2119] [INFO] Booting worker with pid: 2119
+2025-11-20T19:58:49.6877593Z [2025-11-20 19:58:49 +0000] [2120] [INFO] Booting worker with pid: 2120
+2025-11-20T19:58:58.6700992Z [2025-11-20 19:58:58 +0000] [2120] [INFO] Started server process [2120]
+2025-11-20T19:58:58.6882202Z [2025-11-20 19:58:58 +0000] [2120] [INFO] Waiting for application startup.
+2025-11-20T19:58:58.6882634Z [2025-11-20 19:58:58 +0000] [2120] [INFO] Application startup complete.
+2025-11-20T19:58:58.7011581Z [2025-11-20 19:58:58 +0000] [2119] [INFO] Started server process [2119]
+2025-11-20T19:58:58.701205Z [2025-11-20 19:58:58 +0000] [2119] [INFO] Waiting for application startup.
+2025-11-20T19:58:58.7012084Z [2025-11-20 19:58:58 +0000] [2119] [INFO] Application startup complete.
+2025-11-20T20:04:39.3369742Z    _____
+2025-11-20T20:04:39.3374165Z   /  _  \ __________ _________   ____
+2025-11-20T20:04:39.3374274Z  /  /_\  \\___   /  |  \_  __ \_/ __ \
+2025-11-20T20:04:39.3374336Z /    |    \/    /|  |  /|  | \/\  ___/
+2025-11-20T20:04:39.337436Z \____|__  /_____ \____/ |__|    \___  >
+2025-11-20T20:04:39.3374388Z         \/      \/                  \/
+2025-11-20T20:04:39.3374413Z A P P   S E R V I C E   O N   L I N U X
+2025-11-20T20:04:39.3374434Z
+2025-11-20T20:04:39.3374459Z Documentation    : http://aka.ms/webapp-linux
+2025-11-20T20:04:39.3374498Z Python quickstart: https://aka.ms/python-qs
+2025-11-20T20:04:39.3374524Z Python version   : 3.11.14
+2025-11-20T20:04:39.3374547Z Instance Name    : lw0sdlwk00000D
+2025-11-20T20:04:39.3374576Z Instance Id      : 08307498aa991c84523184617d17f074bad5139bd2c0710fdf2b1a0ad3d3a9b7
+2025-11-20T20:04:39.3374598Z
+2025-11-20T20:04:39.337462Z Note: Any data outside '/home' is not persisted
+2025-11-20T20:04:40.8757932Z Starting OpenBSD Secure Shell server: sshd.
+2025-11-20T20:04:40.9055043Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-11-20T20:04:41.0304264Z Updating certificates in /etc/ssl/certs...
+2025-11-20T20:05:11.4443148Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-11-20T20:05:11.446177Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_R46.pem
+2025-11-20T20:05:11.4636006Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-11-20T20:05:11.4752529Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_E46.pem
+2025-11-20T20:05:11.5217257Z 4 added, 0 removed; done.
+2025-11-20T20:05:11.5222866Z Running hooks in /etc/ca-certificates/update.d...
+2025-11-20T20:05:11.5522489Z done.
+2025-11-20T20:05:11.5881177Z CA certificates copied and updated successfully.
+2025-11-20T20:05:11.6847589Z Site's appCommandLine: gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300
+2025-11-20T20:05:11.6851855Z
+2025-11-20T20:05:12.1151301Z Starting periodic command scheduler: cron.
+2025-11-20T20:05:12.1239372Z Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300
+2025-11-20T20:05:12.1239872Z '
+2025-11-20T20:05:12.3262941Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-11-20T20:05:12.3489985Z Build Operation ID: 8e25a534406bef74
+2025-11-20T20:05:12.3574067Z Oryx Version: 0.2.20251017.2, Commit: 482d4c55e818733ab33b9d2131f9dc485a21fd03, ReleaseTagName: 20251017.2
+2025-11-20T20:05:12.3583586Z Output is compressed. Extracting it...
+2025-11-20T20:05:12.3760945Z Extracting '/home/site/wwwroot/output.tar.gz' to directory '/tmp/8de286f9f8776c3'...
+2025-11-20T20:05:25.5496287Z App path is set to '/tmp/8de286f9f8776c3'
+2025-11-20T20:05:25.5680147Z Writing output script to '/opt/startup/startup.sh'
+2025-11-20T20:05:25.9303852Z Using packages from virtual environment antenv located at /tmp/8de286f9f8776c3/antenv.
+2025-11-20T20:05:25.9313937Z Updated PYTHONPATH to '/opt/startup/app_logs:/tmp/8de286f9f8776c3/antenv/lib/python3.11/site-packages'
+2025-11-20T20:05:29.460753Z [2025-11-20 20:05:29 +0000] [2112] [INFO] Starting gunicorn 23.0.0
+2025-11-20T20:05:29.4761553Z [2025-11-20 20:05:29 +0000] [2112] [INFO] Listening at: http://0.0.0.0:8000 (2112)
+2025-11-20T20:05:29.476204Z [2025-11-20 20:05:29 +0000] [2112] [INFO] Using worker: uvicorn.workers.UvicornWorker
+2025-11-20T20:05:29.478727Z [2025-11-20 20:05:29 +0000] [2119] [INFO] Booting worker with pid: 2119
+2025-11-20T20:05:29.5168922Z [2025-11-20 20:05:29 +0000] [2120] [INFO] Booting worker with pid: 2120
+2025-11-20T20:05:41.1578985Z [2025-11-20 20:05:41 +0000] [2119] [INFO] Started server process [2119]
+2025-11-20T20:05:41.1579464Z [2025-11-20 20:05:41 +0000] [2119] [INFO] Waiting for application startup.
+2025-11-20T20:05:41.1579495Z [2025-11-20 20:05:41 +0000] [2119] [INFO] Application startup complete.
+2025-11-20T20:05:41.1579526Z [2025-11-20 20:05:41 +0000] [2120] [INFO] Started server process [2120]
+2025-11-20T20:05:41.1579556Z [2025-11-20 20:05:41 +0000] [2120] [INFO] Waiting for application startup.
+2025-11-20T20:05:41.1579635Z [2025-11-20 20:05:41 +0000] [2120] [INFO] Application startup complete.
+2025-11-20T20:23:25.6291651Z    _____
+2025-11-20T20:23:25.6874723Z   /  _  \ __________ _________   ____
+2025-11-20T20:23:25.6875748Z  /  /_\  \\___   /  |  \_  __ \_/ __ \
+2025-11-20T20:23:25.6875779Z /    |    \/    /|  |  /|  | \/\  ___/
+2025-11-20T20:23:25.6875804Z \____|__  /_____ \____/ |__|    \___  >
+2025-11-20T20:23:25.6875827Z         \/      \/                  \/
+2025-11-20T20:23:25.6875867Z A P P   S E R V I C E   O N   L I N U X
+2025-11-20T20:23:25.6875938Z
+2025-11-20T20:23:25.6875968Z Documentation    : http://aka.ms/webapp-linux
+2025-11-20T20:23:25.6875992Z Python quickstart: https://aka.ms/python-qs
+2025-11-20T20:23:25.6876017Z Python version   : 3.11.14
+2025-11-20T20:23:25.687604Z Instance Name    : lw0sdlwk00000D
+2025-11-20T20:23:25.6876072Z Instance Id      : 08307498aa991c84523184617d17f074bad5139bd2c0710fdf2b1a0ad3d3a9b7
+2025-11-20T20:23:25.687611Z
+2025-11-20T20:23:25.6876132Z Note: Any data outside '/home' is not persisted
+2025-11-20T20:23:27.8981387Z Starting OpenBSD Secure Shell server: sshd.
+2025-11-20T20:23:27.9185188Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-11-20T20:23:28.0439891Z Updating certificates in /etc/ssl/certs...
+2025-11-20T20:23:52.9291787Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2025-11-20T20:23:52.9562086Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_R46.pem
+2025-11-20T20:23:52.9562602Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2025-11-20T20:23:52.9659786Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_E46.pem
+2025-11-20T20:23:53.0259861Z 4 added, 0 removed; done.
+2025-11-20T20:23:53.0268602Z Running hooks in /etc/ca-certificates/update.d...
+2025-11-20T20:23:53.0544088Z done.
+2025-11-20T20:23:53.0752741Z CA certificates copied and updated successfully.
+2025-11-20T20:23:53.2620081Z Site's appCommandLine: gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300
+2025-11-20T20:23:53.272006Z
+2025-11-20T20:23:53.7143898Z Starting periodic command scheduler: cron.
+2025-11-20T20:23:53.7234837Z Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300
+2025-11-20T20:23:53.724808Z '
+2025-11-20T20:23:54.169113Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2025-11-20T20:23:54.1802488Z Build Operation ID: 1873724d5b6bfa46
+2025-11-20T20:23:54.2075019Z Oryx Version: 0.2.20251017.2, Commit: 482d4c55e818733ab33b9d2131f9dc485a21fd03, ReleaseTagName: 20251017.2
+2025-11-20T20:23:54.2077733Z Output is compressed. Extracting it...
+2025-11-20T20:23:54.2180251Z Extracting '/home/site/wwwroot/output.tar.gz' to directory '/tmp/8de28724861ce78'...
+2025-11-20T20:24:12.352089Z App path is set to '/tmp/8de28724861ce78'
+2025-11-20T20:24:12.3748441Z Writing output script to '/opt/startup/startup.sh'
+2025-11-20T20:24:12.720157Z Using packages from virtual environment antenv located at /tmp/8de28724861ce78/antenv.
+2025-11-20T20:24:12.7379711Z Updated PYTHONPATH to '/opt/startup/app_logs:/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages'
+2025-11-20T20:24:15.9628316Z [2025-11-20 20:24:15 +0000] [2112] [INFO] Starting gunicorn 23.0.0
+2025-11-20T20:24:15.9640573Z [2025-11-20 20:24:15 +0000] [2112] [INFO] Listening at: http://0.0.0.0:8000 (2112)
+2025-11-20T20:24:15.9645602Z [2025-11-20 20:24:15 +0000] [2112] [INFO] Using worker: uvicorn.workers.UvicornWorker
+2025-11-20T20:24:15.9826644Z [2025-11-20 20:24:15 +0000] [2119] [INFO] Booting worker with pid: 2119
+2025-11-20T20:24:16.0792668Z [2025-11-20 20:24:16 +0000] [2120] [INFO] Booting worker with pid: 2120
+2025-11-20T20:24:22.6638235Z [2025-11-20 20:24:22 +0000] [2119] [ERROR] Exception in worker process
+2025-11-20T20:24:22.6638922Z Traceback (most recent call last):
+2025-11-20T20:24:22.6638956Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/arbiter.py", line 608, in spawn_worker
+2025-11-20T20:24:22.6638981Z     worker.init_process()
+2025-11-20T20:24:22.663901Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/uvicorn/workers.py", line 75, in init_process
+2025-11-20T20:24:22.6639033Z     super().init_process()
+2025-11-20T20:24:22.663906Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/workers/base.py", line 135, in init_process
+2025-11-20T20:24:22.6639108Z     self.load_wsgi()
+2025-11-20T20:24:22.6639133Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/workers/base.py", line 147, in load_wsgi
+2025-11-20T20:24:22.6639157Z     self.wsgi = self.app.wsgi()
+2025-11-20T20:24:22.6639178Z                 ^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6639202Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/app/base.py", line 66, in wsgi
+2025-11-20T20:24:22.6639223Z     self.callable = self.load()
+2025-11-20T20:24:22.6639268Z                     ^^^^^^^^^^^
+2025-11-20T20:24:22.6639292Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/app/wsgiapp.py", line 57, in load
+2025-11-20T20:24:22.6639314Z     return self.load_wsgiapp()
+2025-11-20T20:24:22.6639335Z            ^^^^^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6639386Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/app/wsgiapp.py", line 47, in load_wsgiapp
+2025-11-20T20:24:22.6639409Z     return util.import_app(self.app_uri)
+2025-11-20T20:24:22.6639452Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6639477Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/util.py", line 370, in import_app
+2025-11-20T20:24:22.66395Z     mod = importlib.import_module(module)
+2025-11-20T20:24:22.6639522Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6639546Z   File "/opt/python/3.11.14/lib/python3.11/importlib/__init__.py", line 126, in import_module
+2025-11-20T20:24:22.6639569Z     return _bootstrap._gcd_import(name[level:], package, level)
+2025-11-20T20:24:22.6639613Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6639636Z   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+2025-11-20T20:24:22.6639659Z   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+2025-11-20T20:24:22.6639683Z   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+2025-11-20T20:24:22.6639706Z   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+2025-11-20T20:24:22.663973Z   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+2025-11-20T20:24:22.6639772Z   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+2025-11-20T20:24:22.6650233Z   File "/tmp/8de28724861ce78/main.py", line 13, in <module>
+2025-11-20T20:24:22.6650433Z     from tools.merge_pdf import merge_pdfs
+2025-11-20T20:24:22.6650464Z   File "/tmp/8de28724861ce78/tools/merge_pdf.py", line 1, in <module>
+2025-11-20T20:24:22.6650488Z     from PyPDF2 import PdfMerger
+2025-11-20T20:24:22.6650511Z ModuleNotFoundError: No module named 'PyPDF2'
+2025-11-20T20:24:22.6652304Z [2025-11-20 20:24:22 +0000] [2119] [INFO] Worker exiting (pid: 2119)
+2025-11-20T20:24:22.6747374Z [2025-11-20 20:24:22 +0000] [2120] [ERROR] Exception in worker process
+2025-11-20T20:24:22.6748146Z Traceback (most recent call last):
+2025-11-20T20:24:22.6748184Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/arbiter.py", line 608, in spawn_worker
+2025-11-20T20:24:22.6748209Z     worker.init_process()
+2025-11-20T20:24:22.6748244Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/uvicorn/workers.py", line 75, in init_process
+2025-11-20T20:24:22.6748348Z     super().init_process()
+2025-11-20T20:24:22.6748375Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/workers/base.py", line 135, in init_process
+2025-11-20T20:24:22.6748399Z     self.load_wsgi()
+2025-11-20T20:24:22.6748427Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/workers/base.py", line 147, in load_wsgi
+2025-11-20T20:24:22.674845Z     self.wsgi = self.app.wsgi()
+2025-11-20T20:24:22.6748472Z                 ^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6748524Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/app/base.py", line 66, in wsgi
+2025-11-20T20:24:22.6748547Z     self.callable = self.load()
+2025-11-20T20:24:22.6748568Z                     ^^^^^^^^^^^
+2025-11-20T20:24:22.6748593Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/app/wsgiapp.py", line 57, in load
+2025-11-20T20:24:22.6748617Z     return self.load_wsgiapp()
+2025-11-20T20:24:22.6748639Z            ^^^^^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6748684Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/app/wsgiapp.py", line 47, in load_wsgiapp
+2025-11-20T20:24:22.6748708Z     return util.import_app(self.app_uri)
+2025-11-20T20:24:22.674873Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6748754Z   File "/tmp/8de28724861ce78/antenv/lib/python3.11/site-packages/gunicorn/util.py", line 370, in import_app
+2025-11-20T20:24:22.6748777Z     mod = importlib.import_module(module)
+2025-11-20T20:24:22.6748799Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6748846Z   File "/opt/python/3.11.14/lib/python3.11/importlib/__init__.py", line 126, in import_module
+2025-11-20T20:24:22.6748871Z     return _bootstrap._gcd_import(name[level:], package, level)
+2025-11-20T20:24:22.6748895Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-11-20T20:24:22.6748919Z   File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+2025-11-20T20:24:22.6748943Z   File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+2025-11-20T20:24:22.6748967Z   File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+2025-11-20T20:24:22.6749012Z   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+2025-11-20T20:24:22.6749037Z   File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+2025-11-20T20:24:22.6749061Z   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+2025-11-20T20:24:22.6749085Z   File "/tmp/8de28724861ce78/main.py", line 13, in <module>
+2025-11-20T20:24:22.674913Z     from tools.merge_pdf import merge_pdfs
+2025-11-20T20:24:22.6749154Z   File "/tmp/8de28724861ce78/tools/merge_pdf.py", line 1, in <module>
+2025-11-20T20:24:22.6749197Z     from PyPDF2 import PdfMerger
+2025-11-20T20:24:22.6749221Z ModuleNotFoundError: No module named 'PyPDF2'
+2025-11-20T20:24:22.6855835Z [2025-11-20 20:24:22 +0000] [2120] [INFO] Worker exiting (pid: 2120)
+2025-11-20T20:24:23.7113291Z [2025-11-20 20:24:23 +0000] [2112] [ERROR] Worker (pid:2119) exited with code 3
+2025-11-20T20:24:23.7597425Z [2025-11-20 20:24:23 +0000] [2112] [ERROR] Worker (pid:2120) was sent SIGTERM!
+2025-11-20T20:24:23.8211141Z [2025-11-20 20:24:23 +0000] [2112] [ERROR] Shutting down: Master
+2025-11-20T20:24:23.8227693Z [2025-11-20 20:24:23 +0000] [2112] [ERROR] Reason: Worker failed to boot.
