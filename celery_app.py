@@ -1,10 +1,13 @@
 from celery import Celery
 import os
 
+# Use Azure Redis in production, local Redis in development
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+
 celery_app = Celery(
     'pdf_tools',
-    broker=os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0'),
-    backend=os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+    broker=os.getenv('CELERY_BROKER_URL', redis_url),
+    backend=os.getenv('CELERY_RESULT_BACKEND', redis_url)
 )
 
 celery_app.conf.task_routes = {
