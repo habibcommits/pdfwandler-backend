@@ -1,403 +1,375 @@
 # Azure Web App Deployment Guide for PDF Tools API
 
+## Updated: November 2025 - With Azure Redis Integration
+
+This guide uses:
+- ✓ Azure Web App (Python 3.11)
+- ✓ Azure Redis Cache (managed service)
+- ✓ PyPDF2 for PDF operations (no external dependencies)
+- ✓ GitHub Actions for CI/CD
+
+---
+
 ## Quick Deployment Steps
 
 ### 1. Prerequisites
-- Azure subscription
-- Azure CLI installed or use Azure Portal
-- Git repository
+- Azure subscription with Web App and Redis Cache already created
+- GitHub repository with the code
+- Azure CLI (optional, for manual commands)
 
-### 2. Create Azure Web App
+### 2. Azure Resources Setup (One-Time)
 
-#### Using Azure Portal:
-1. Go to Azure Portal (portal.azure.com)
-2. Create a new **Web App**
-3. **Configuration:**
-   - **Runtime Stack:** Python 3.11
-   - **Operating System:** Linux
-   - **Region:** Choose nearest to your users
-   - **Plan:** Basic B1 or higher (recommended: Standard S1 for production)
-
-#### Using Azure CLI:
+#### Create Resource Group
 ```bash
-# Login to Azure
-az login
-
-# Create resource group
 az group create --name pdf-tools-rg --location eastus
+```
 
-# Create App Service plan (Standard S1 recommended for production)
+#### Create App Service Plan
+```bash
 az appservice plan create \
     --name pdf-tools-plan \
     --resource-group pdf-tools-rg \
     --sku S1 \
     --is-linux
+```
 
-# Create web app
+#### Create Web App
+```bash
 az webapp create \
     --resource-group pdf-tools-rg \
     --plan pdf-tools-plan \
-    --name your-pdf-tools-app \
+    --name pdfbackendpython \
     --runtime "PYTHON:3.11"
 ```
 
-### 3. Install System Dependencies (CRITICAL)
-
-**Azure Web Apps don't include Ghostscript or Redis by default.** You must install them.
-
-#### Option A: Using App Service SSH (Recommended for Testing)
-1. In Azure Portal, go to your Web App → Development Tools → SSH
-2. Connect to the SSH console
-3. Run the installation script:
-```bash
-cd /home/site/wwwroot
-chmod +x .azure/install-dependencies.sh
-./.azure/install-dependencies.sh
-```
-
-#### Option B: Using Custom Startup Command (Permanent Solution)
-Create a custom Docker container or use Azure Container Apps instead. Here's a Dockerfile for reference:
-
-```dockerfile
-FROM python:3.11-slim
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    ghostscript \
-    redis-server \
-    redis-tools \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
-WORKDIR /app
-
-# Copy requirements and install Python packages
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application files
-COPY . .
-
-# Make startup script executable
-RUN chmod +x startup.sh
-
-# Expose port
-EXPOSE 8000
-
-# Run startup script
-CMD ["./startup.sh"]
-```
-
-#### Option C: Use Azure Redis Cache (Recommended for Production)
-
-Instead of running Redis locally, use Azure Cache for Redis:
-
-1. Create Azure Redis Cache:
+#### Create Azure Redis Cache
 ```bash
 az redis create \
     --resource-group pdf-tools-rg \
-    --name your-redis-cache \
+    --name pythonbackendpdf \
     --location eastus \
     --sku Basic \
     --vm-size c0
 ```
 
-2. Get connection string:
+Get the connection string from Azure Portal or CLI:
 ```bash
 az redis list-keys \
     --resource-group pdf-tools-rg \
-    --name your-redis-cache
+    --name pythonbackendpdf
 ```
 
-3. Set environment variables in Azure Web App:
+---
+
+### 3. Configure Environment Variables
+
+Set these in Azure Web App → Configuration → Application settings:
+
+```
+REDIS_URL = rediss://default:YOUR_PRIMARY_KEY@pythonbackendpdf.redis.cache.windows.net:6380/0
+PYTHONPATH = /home/site/wwwroot
+```
+
+**Replace `YOUR_PRIMARY_KEY`** with the primary access key from Azure Redis.
+
+#### Using Azure CLI:
 ```bash
 az webapp config appsettings set \
     --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app \
+    --name pdfbackendpython \
     --settings \
-        CELERY_BROKER_URL="redis://your-redis-cache.redis.cache.windows.net:6380/0?ssl=true&password=YOUR_PASSWORD" \
-        CELERY_RESULT_BACKEND="redis://your-redis-cache.redis.cache.windows.net:6380/0?ssl=true&password=YOUR_PASSWORD"
+        "REDIS_URL=rediss://default:YOUR_PRIMARY_KEY@pythonbackendpdf.redis.cache.windows.net:6380/0" \
+        "PYTHONPATH=/home/site/wwwroot"
 ```
 
-4. Modify startup.sh to skip Redis installation:
-```bash
-# Comment out Redis server start if using Azure Redis Cache
-# redis-server --daemonize yes ...
-```
+---
 
 ### 4. Configure Startup Command
 
-In Azure Portal → Configuration → General Settings → Startup Command:
-```bash
-bash startup.sh
-```
-
-Or using Azure CLI:
+#### Option A: Using Startup File (Recommended)
 ```bash
 az webapp config set \
     --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app \
-    --startup-file "bash startup.sh"
+    --name pdfbackendpython \
+    --startup-file "gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300 --bind 0.0.0.0:8000"
 ```
 
-### 5. Deploy Your Code
+#### Option B: In Azure Portal
+1. Go to **Configuration** → **General settings**
+2. Set **Startup Command** to:
+```
+gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 2 --timeout 300 --bind 0.0.0.0:8000
+```
 
-#### Option A: Git Deployment (Recommended)
+---
+
+### 5. Deploy Code
+
+#### Option A: Git Push Deployment (Recommended)
+
+**Step 1: Configure local Git deployment**
 ```bash
-# Configure Git deployment
-az webapp deployment source config \
-    --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app \
-    --repo-url https://github.com/yourusername/your-repo \
-    --branch main \
-    --manual-integration
-
-# Or use local Git
 az webapp deployment source config-local-git \
     --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app
+    --name pdfbackendpython
+```
 
-# Push your code
-git remote add azure <git-url-from-above-command>
+This returns a Git URL like: `https://yourusername@pdfbackendpython.scm.azurewebsites.net/pdfbackendpython.git`
+
+**Step 2: Add remote and push**
+```bash
+git remote add azure <git-url-from-above>
 git push azure main
 ```
 
-#### Option B: ZIP Deployment
-```bash
-# Create ZIP of your project (exclude .git, venv, etc.)
-zip -r pdf-tools.zip . -x "*.git*" "*venv*" "*__pycache__*" "*.pyc"
+#### Option B: GitHub Actions (Automated)
 
-# Deploy ZIP
+Create `.github/workflows/deploy.yml`:
+```yaml
+name: Deploy to Azure
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'pdfbackendpython'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+```
+
+**Get publish profile:**
+1. In Azure Portal, go to **Web App** → **Download publish profile**
+2. Add it to GitHub Secrets as `AZURE_PUBLISH_PROFILE`
+
+#### Option C: ZIP Deployment
+```bash
+zip -r deploy.zip . -x "*.git*" "*venv*" "*__pycache__*" "*.pyc" "*node_modules*"
+
 az webapp deploy \
     --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app \
-    --src-path pdf-tools.zip \
+    --name pdfbackendpython \
+    --src-path deploy.zip \
     --type zip
 ```
 
-### 6. Environment Variables (Optional Customization)
+---
 
-```bash
-az webapp config appsettings set \
-    --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app \
-    --settings \
-        PORT="8000" \
-        WORKERS="4"
-```
+### 6. Verify Deployment
 
-### 7. Verify Deployment
-
-Check if all services are running:
-
-1. **View Logs:**
+**Check logs:**
 ```bash
 az webapp log tail \
     --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app
+    --name pdfbackendpython
 ```
 
-2. **Test API:**
+**Test endpoints:**
 ```bash
 # Health check
-curl https://your-pdf-tools-app.azurewebsites.net/health
+curl https://pdfbackendpython.azurewebsites.net/health
 
 # API info
-curl https://your-pdf-tools-app.azurewebsites.net/
+curl https://pdfbackendpython.azurewebsites.net/
+
+# Interactive docs
+https://pdfbackendpython.azurewebsites.net/docs
 ```
 
-### 8. Production Recommendations
+---
 
-#### Use Azure Container Apps or AKS for Complex Deployments
-
-For production with full control over dependencies:
+### 7. Enable HTTPS Only
 
 ```bash
-# Create container registry
-az acr create \
+az webapp update \
     --resource-group pdf-tools-rg \
-    --name yourregistry \
-    --sku Basic
-
-# Build and push image
-az acr build \
-    --registry yourregistry \
-    --image pdf-tools:latest \
-    .
-
-# Deploy to Container Apps
-az containerapp create \
-    --name pdf-tools-app \
-    --resource-group pdf-tools-rg \
-    --environment my-env \
-    --image yourregistry.azurecr.io/pdf-tools:latest \
-    --target-port 8000 \
-    --ingress external \
-    --cpu 2.0 --memory 4.0Gi
+    --name pdfbackendpython \
+    --https-only true
 ```
 
-#### Use Azure Redis Cache (Not Local Redis)
+---
 
-For production, always use Azure Redis Cache:
-- Automatic backups
-- High availability
-- Better performance
-- Managed service (no maintenance)
+## Troubleshooting
 
-Cost: ~$16/month for Basic tier
+### Issue: Connection Timeout to Redis
+**Solution:** Check Azure Redis firewall rules
+1. Azure Portal → Redis Cache → Networking → Firewall rules
+2. Add your App Service IP address
+3. Or enable "Allow access from Azure Services"
 
-#### Scale Configuration
-
-For better performance with large PDFs:
-
+### Issue: 502 Bad Gateway / App Crashes
+**Solution:** Check startup logs
 ```bash
-# Scale to Standard S2 (2 cores, 3.5 GB RAM)
+az webapp log tail --resource-group pdf-tools-rg --name pdfbackendpython
+```
+
+Common causes:
+- Missing REDIS_URL environment variable
+- Redis password incorrect
+- Startup command syntax error
+
+### Issue: Celery Tasks Not Processing
+**Solution:** Verify Redis connection
+```bash
+# Test Redis connection from app
+python3 -c "from celery_app import celery_app; celery_app.broker_connection().connect()"
+```
+
+### Issue: "Gunicorn: command not found"
+**Solution:** Ensure requirements.txt is installed
+```bash
+az webapp ssh --resource-group pdf-tools-rg --name pdfbackendpython
+pip list | grep gunicorn
+```
+
+---
+
+## Performance Optimization
+
+### Increase Worker Processes
+Edit startup command to use more workers (if using S2 or higher):
+```
+gunicorn -k uvicorn.workers.UvicornWorker main:app --workers 4 --timeout 300 --bind 0.0.0.0:8000
+```
+
+### Scale Up App Service
+```bash
+# Upgrade to S2 (2 cores, 3.5 GB RAM)
 az appservice plan update \
     --name pdf-tools-plan \
     --resource-group pdf-tools-rg \
     --sku S2
+```
 
-# Enable autoscaling
+### Enable Auto-Scaling
+```bash
 az monitor autoscale create \
     --resource-group pdf-tools-rg \
-    --resource your-pdf-tools-app \
+    --resource pdfbackendpython \
+    --resource-type "Microsoft.Web/sites" \
     --min-count 1 \
-    --max-count 5 \
-    --count 2
+    --max-count 3
 ```
 
-### 9. Troubleshooting
+---
 
-#### Ghostscript not found
-```bash
-# SSH into the app
-az webapp ssh --resource-group pdf-tools-rg --name your-pdf-tools-app
+## Cost Estimation
 
-# Install Ghostscript manually
-apt-get update && apt-get install -y ghostscript
+| Component | Tier | Cost/Month |
+|-----------|------|-----------|
+| App Service | S1 | $70 |
+| Azure Redis | Basic C0 | $16 |
+| **Total** | | **~$86** |
 
-# Verify
-gs --version
-```
+For higher traffic, upgrade to S2 ($140/month) + Standard Redis ($55/month) = $195/month
 
-#### Redis connection failed
-- Use Azure Redis Cache instead of local Redis
-- Check firewall rules
-- Verify connection string
-
-#### Celery not starting
-- Check logs: `az webapp log tail`
-- Verify Redis is accessible
-- Check file permissions on /tmp/celery
-
-#### App crashes on startup
-- Check startup logs
-- Verify all system dependencies are installed
-- Check that startup.sh is executable
-
-## Performance Benchmarks
-
-With Standard S1 instance + Ghostscript:
-- **Image to PDF:** ~2-3 seconds for 10 images
-- **Merge PDF:** ~1-2 seconds for 5 PDFs (50MB total)
-- **Compress PDF:** ~3-5 seconds for 100MB PDF file
-
-With Standard S2 instance:
-- **Compress PDF:** ~2-3 seconds for 100MB PDF file (faster CPU)
-
-## Cost Estimation (Azure)
-
-### App Service:
-- **Basic B1:** ~$13/month - Development/testing
-- **Standard S1:** ~$70/month - Production (light)
-- **Standard S2:** ~$140/month - Production (medium load)
-- **Premium P1V2:** ~$150/month - Production (heavy load)
-
-### Azure Redis Cache:
-- **Basic C0:** ~$16/month - 250MB cache
-- **Standard C1:** ~$55/month - 1GB cache with replication
-
-### Total Recommended for Production:
-- S1 App Service + Basic Redis = ~$86/month
-- S2 App Service + Standard Redis = ~$195/month
+---
 
 ## Security Best Practices
 
-1. **Enable HTTPS only:**
+### 1. Regenerate Redis Keys Regularly
 ```bash
-az webapp update \
-    --https-only true \
-    --name your-pdf-tools-app \
-    --resource-group pdf-tools-rg
-```
-
-2. **Enable Managed Identity** (for secure resource access):
-```bash
-az webapp identity assign \
+az redis regenerate-keys \
     --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app
+    --name pythonbackendpdf \
+    --key-type primary
 ```
 
-3. **Configure IP restrictions** (optional):
+Then update `REDIS_URL` in App Settings.
+
+### 2. Enable Azure Front Door (DDoS Protection)
+```bash
+az network front-door create \
+    --resource-group pdf-tools-rg \
+    --name pdf-tools-fd \
+    --backend-address pdfbackendpython.azurewebsites.net
+```
+
+### 3. Enable Application Insights
+```bash
+az monitor app-insights component create \
+    --app pdf-tools-insights \
+    --resource-group pdf-tools-rg \
+    --application-type web
+
+# Get instrumentation key and add to App Settings
+```
+
+### 4. Restrict IP Access (Optional)
 ```bash
 az webapp config access-restriction add \
     --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app \
+    --name pdfbackendpython \
     --rule-name AllowOffice \
     --action Allow \
-    --ip-address 1.2.3.4/32 \
+    --ip-address 203.0.113.0/24 \
     --priority 100
 ```
 
-4. **Enable Application Insights** (monitoring):
-```bash
-az monitor app-insights component create \
-    --app your-pdf-tools-insights \
-    --location eastus \
-    --resource-group pdf-tools-rg
+---
 
-# Link to Web App
-az webapp config appsettings set \
+## Monitoring & Alerts
+
+### View App Service Metrics
+1. Azure Portal → Web App → Metrics
+2. Monitor: CPU Percentage, Memory Percentage, HTTP 5xx errors
+
+### Set Up Alerts
+```bash
+az monitor metrics alert create \
+    --name "High CPU Alert" \
     --resource-group pdf-tools-rg \
-    --name your-pdf-tools-app \
-    --settings APPINSIGHTS_INSTRUMENTATIONKEY=<key>
+    --scopes /subscriptions/{sub-id}/resourceGroups/pdf-tools-rg/providers/Microsoft.Web/sites/pdfbackendpython \
+    --condition "avg Percentage CPU > 80" \
+    --window-size 5m \
+    --evaluation-frequency 1m
 ```
 
-## Alternative: Deploy to Azure Container Apps (Recommended)
+---
 
-Container Apps give you full control and easier dependency management:
+## Architecture Overview
 
-1. **Create environment:**
-```bash
-az containerapp env create \
-    --name pdf-tools-env \
-    --resource-group pdf-tools-rg \
-    --location eastus
+```
+Client Request
+    ↓
+Azure Front Door / CDN (Optional)
+    ↓
+App Service (Web App)
+    ├── FastAPI Server (Port 8000)
+    ├── Gunicorn WSGI Server
+    └── Python 3.11
+    ↓
+Azure Redis Cache (rediss://...)
+    ├── Celery Broker
+    └── Task Results
+    ↓
+Processed Response
 ```
 
-2. **Build and deploy:**
-```bash
-# Build container
-docker build -t pdf-tools:latest .
+---
 
-# Tag for ACR
-docker tag pdf-tools:latest yourregistry.azurecr.io/pdf-tools:latest
+## What's NOT Needed (Unlike Previous Docs)
 
-# Push to ACR
-docker push yourregistry.azurecr.io/pdf-tools:latest
+- ❌ **Ghostscript** - Using PyPDF2 (pure Python)
+- ❌ **Local Redis** - Using Azure Redis Cache (managed service)
+- ❌ **SSH Installation** - No system dependencies needed
+- ❌ **Docker** - Direct App Service deployment works fine
 
-# Deploy
-az containerapp create \
-    --name pdf-tools-app \
-    --resource-group pdf-tools-rg \
-    --environment pdf-tools-env \
-    --image yourregistry.azurecr.io/pdf-tools:latest \
-    --target-port 8000 \
-    --ingress external \
-    --cpu 2.0 \
-    --memory 4.0Gi \
-    --min-replicas 1 \
-    --max-replicas 5
-```
+---
 
-This approach is more reliable and gives you better control over system dependencies!
+## Next Steps
+
+1. ✅ Set `REDIS_URL` environment variable in Azure
+2. ✅ Deploy code (via Git push or GitHub Actions)
+3. ✅ Test `/health` endpoint
+4. ✅ Monitor logs for any errors
+5. ✅ Configure custom domain (optional)
+
+For questions, check Azure documentation: https://docs.microsoft.com/en-us/azure/app-service/
