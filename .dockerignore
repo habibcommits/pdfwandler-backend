@@ -1,0 +1,59 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+venv
+.venv
+env
+ENV
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache
+.coverage
+htmlcov
+
+# Documentation
+*.md
+!README.md
+!SECURITY.md
+
+# Local development
+.env
+.env.local
+uploads/*
+temp/*
+*.log
+celerybeat-schedule
+celerybeat-schedule.db
+
+# Deployment
+.deployment
+.azure
+nixpacks.toml
+railway.json
+DEPLOYMENT_SUMMARY.md
+
+# Test files
+performance_test.py
+performance_test_*.pdf
+sample_output.pdf
+test_*.py
+verify_*.py
