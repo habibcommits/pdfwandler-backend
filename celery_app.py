@@ -26,17 +26,15 @@ celery_app.conf.update(
 
 from celery.schedules import crontab
 
-# Cleanup schedule - runs every hour (increased from 30 minutes)
-# Files older than 2 hours will be deleted (matches main.py settings)
 celery_app.conf.beat_schedule = {
-    'cleanup-temp-files-every-hour': {
+    'cleanup-temp-files-every-30-minutes': {
         'task': 'tasks.cleanup_old_files',
-        'schedule': crontab(minute='0'),  # Every hour at minute 0
-        'args': ('temp', 2),  # 2 hours max age (increased from 1 hour)
+        'schedule': crontab(minute='*/30'),
+        'args': ('temp', 1),
     },
-    'cleanup-upload-files-every-hour': {
+    'cleanup-upload-files-every-30-minutes': {
         'task': 'tasks.cleanup_old_files',
-        'schedule': crontab(minute='0'),  # Every hour at minute 0
-        'args': ('uploads', 2),  # 2 hours max age (increased from 1 hour)
+        'schedule': crontab(minute='*/30'),
+        'args': ('uploads', 1),
     },
 }
