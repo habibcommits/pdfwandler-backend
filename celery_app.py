@@ -7,7 +7,8 @@ redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 celery_app = Celery(
     'pdf_tools',
     broker=os.getenv('CELERY_BROKER_URL', redis_url),
-    backend=os.getenv('CELERY_RESULT_BACKEND', redis_url)
+    backend=os.getenv('CELERY_RESULT_BACKEND', redis_url),
+    include=['tasks']  # Auto-discover tasks from tasks.py
 )
 
 celery_app.conf.task_routes = {
