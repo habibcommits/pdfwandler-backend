@@ -1,4 +1,4 @@
-from PyPDF2 import PdfMerger
+from pypdf import PdfWriter, PdfReader
 from typing import List
 
 def merge_pdfs(pdf_paths: List[str], output_path: str) -> None:
@@ -15,13 +15,12 @@ def merge_pdfs(pdf_paths: List[str], output_path: str) -> None:
     if len(pdf_paths) < 2:
         raise ValueError("At least 2 PDF files are required for merging")
     
-    merger = PdfMerger()
+    writer = PdfWriter()
     
-    try:
-        for pdf_path in pdf_paths:
-            merger.append(pdf_path)
-        
-        merger.write(output_path)
+    for pdf_path in pdf_paths:
+        reader = PdfReader(pdf_path)
+        for page in reader.pages:
+            writer.add_page(page)
     
-    finally:
-        merger.close()
+    with open(output_path, 'wb') as output_file:
+        writer.write(output_file)
