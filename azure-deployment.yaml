@@ -1,0 +1,137 @@
+apiVersion: '2021-10-01'
+# Change this to your preferred Azure region (eastus, westus2, westeurope, etc.)
+location: eastus
+# Change this to your desired container group name
+name: pdf-tools-api
+properties:
+  containers:
+  # FastAPI Container - Main API Server
+  - name: fastapi
+    properties:
+      # REPLACE: your-dockerhub-username with your actual Docker Hub username
+      image: your-dockerhub-username/pdf-tools:latest
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGb: 2.0
+      ports:
+      - port: 5000
+        protocol: TCP
+      environmentVariables:
+      - name: REDIS_URL
+        value: redis://localhost:6379/0
+      - name: CELERY_BROKER_URL
+        value: redis://localhost:6379/0
+      - name: CELERY_RESULT_BACKEND
+        value: redis://localhost:6379/0
+      - name: PYTHONUNBUFFERED
+        value: "1"
+      command:
+      - uvicorn
+      - main:app
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "5000"
+  
+  # Celery Worker Container - Background Task Processor
+  - name: celery-worker
+    properties:
+      # REPLACE: your-dockerhub-username with your actual Docker Hub username
+      image: your-dockerhub-username/pdf-tools:latest
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGb: 1.5
+      environmentVariables:
+      - name: REDIS_URL
+        value: redis://localhost:6379/0
+      - name: CELERY_BROKER_URL
+        value: redis://localhost:6379/0
+      - name: CELERY_RESULT_BACKEND
+        value: redis://localhost:6379/0
+      - name: PYTHONUNBUFFERED
+        value: "1"
+      command:
+      - celery
+      - -A
+      - celery_app
+      - worker
+      - --loglevel=info
+      - --concurrency=2
+  
+  # Celery Beat Container - Task Scheduler
+  - name: celery-beat
+    properties:
+      # REPLACE: your-dockerhub-username with your actual Docker Hub username
+      image: your-dockerhub-username/pdf-tools:latest
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGb: 0.5
+      environmentVariables:
+      - name: REDIS_URL
+        value: redis://localhost:6379/0
+      - name: CELERY_BROKER_URL
+        value: redis://localhost:6379/0
+      - name: CELERY_RESULT_BACKEND
+        value: redis://localhost:6379/0
+      - name: PYTHONUNBUFFERED
+        value: "1"
+      command:
+      - celery
+      - -A
+      - celery_app
+      - beat
+      - --loglevel=info
+  
+  # Redis Container - Message Broker and Result Backend
+  - name: redis
+    properties:
+      image: redis:7-alpine
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGb: 0.5
+      ports:
+      - port: 6379
+        protocol: TCP
+      command:
+      - redis-server
+      - --loglevel
+      - notice
+      - --maxmemory
+      - 256mb
+      - --maxmemory-policy
+      - allkeys-lru
+
+  # Operating system type (Linux required for multi-container)
+  osType: Linux
+  
+  # Public IP address and exposed ports
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: TCP
+      port: 5000
+    # REPLACE: pdf-tools-unique-name with a unique DNS label
+    # This will be your URL: http://pdf-tools-unique-name.eastus.azurecontainer.io
+    dnsNameLabel: pdf-tools-unique-name
+  
+  # Restart policy for containers
+  restartPolicy: Always
+
+# Optional: If your Docker Hub repository is private, uncomment and configure:
+#  imageRegistryCredentials:
+#  - server: docker.io
+#    username: your-dockerhub-username
+#    password: your-dockerhub-password
+
+# Resource type (do not change)
+type: Microsoft.ContainerInstance/containerGroups
+
+# Optional: Add tags for organization
+tags:
+  application: pdf-tools
+  environment: production
+  deployed-by: azure-cli

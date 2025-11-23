@@ -1,59 +1,107 @@
-# Git
+# Git files
 .git
 .gitignore
+.gitattributes
 
-# Python
-__pycache__
-*.pyc
-*.pyo
-*.pyd
-.Python
+# Documentation (exclude all markdown files from Docker image)
+*.md
+README.md
+CONFIGURATION.md
+AZURE_DEPLOYMENT_GUIDE_COMPLETE.md
+DEPLOYMENT_SUMMARY.md
+INSPECTION_REPORT.md
+
+# Python cache and build files
+__pycache__/
+*.py[cod]
+*$py.class
 *.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
 *.egg
-*.egg-info
-dist
-build
-venv
-.venv
-env
-ENV
+MANIFEST
 
-# IDE
-.vscode
-.idea
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE and editor files
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
+.DS_Store
+*.bak
 
-# Testing
-.pytest_cache
-.coverage
-htmlcov
-
-# Documentation
-*.md
-!README.md
-!SECURITY.md
-
-# Local development
-.env
-.env.local
-uploads/*
+# Temporary files and uploads (exclude from image)
 temp/*
+!temp/.gitkeep
+uploads/*
+!uploads/.gitkeep
+*.tmp
 *.log
 celerybeat-schedule
 celerybeat-schedule.db
-
-# Deployment
-.deployment
-.azure
-nixpacks.toml
-railway.json
-DEPLOYMENT_SUMMARY.md
+celerybeat.pid
 
 # Test files
-performance_test.py
-performance_test_*.pdf
-sample_output.pdf
+tests/
 test_*.py
-verify_*.py
+*_test.py
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Azure and deployment files
+azure-deployment.yaml
+.azure/
+.deployment
+nixpacks.toml
+railway.json
+
+# Docker files (don't include in image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Replit-specific files
+.replit
+replit.nix
+replit.md
+.breakpoints
+.upm/
+.config/
+
+# Logs and temporary runtime files
+logs/
+*.log
+/tmp/
+.cache/
+
+# Environment files
+.env
+.env.local
+.env.*.local
