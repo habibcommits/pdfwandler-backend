@@ -1,12 +1,10 @@
-# Dockerfile for PDF Tools API
-# Optimized for Azure Container Instances (multi-container) and Azure App Service
+# Dockerfile for PDF Tools API (FastAPI only, production-ready)
 FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-# Note: Redis is NOT installed here - use separate Redis container for production
+# Install system dependencies needed for PDFs
 RUN apt-get update && apt-get install -y \
     ghostscript \
     gcc \
@@ -18,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# Copy requirements first (for better Docker layer caching)
+# Copy requirements first for layer caching
 COPY requirements.txt .
 
 # Install Python dependencies
@@ -33,17 +31,13 @@ RUN mkdir -p uploads temp /tmp/celery
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
+# Redis URLs will be passed via ACI environment variables
+# REDIS_URL=redis://<your-redis-host>:6379/0
+# CELERY_BROKER_URL=redis://<your-redis-host>:6379/0
+# CELERY_RESULT_BACKEND=redis://<your-redis-host>:6379/0
 
-# Expose port 5000 (matches FastAPI configuration)
+# Expose FastAPI port
 EXPOSE 5000
 
-# Note: HEALTHCHECK removed for multi-container compatibility
-# In Azure Container Instances, the same image is used for FastAPI, Celery worker, and Celery beat
-# A FastAPI-specific health check would cause worker/beat containers to fail
-# Azure monitors container state via process exit codes instead
-
-# Default command: Start FastAPI with Uvicorn
-# This can be overridden in Azure Container Instances YAML or docker-compose
-# For Celery worker: celery -A celery_app worker --loglevel=info
-# For Celery beat: celery -A celery_app beat --loglevel=info
+# Start FastAPI with Uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
